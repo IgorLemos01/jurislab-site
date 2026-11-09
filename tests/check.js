@@ -48,7 +48,32 @@ const check = (ok, msg) => { if (!ok) failures.push(msg); };
         await page.click('#site-nav a[href="#equipe"]');
         await page.waitForTimeout(200);
         check(await toggle.getAttribute('aria-expanded') === 'false', 'menu não fechou após clique');
+        // Escape devolve o foco ao botão
+        await toggle.click();
+        await page.focus('#site-nav a[href="#faq"]');
+        await page.keyboard.press('Escape');
+        check(await page.evaluate(() => document.activeElement.classList.contains('nav-toggle')), 'Escape não devolveu foco ao botão do menu');
       }
+      // Contraste (WCAG AA)
+      const contrast = await page.evaluate(() => {
+        const lum = c => { const [r, g, b] = c.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number).map(v => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }); return .2126 * r + .7152 * g + .0722 * b; };
+        const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + .05) / (y + .05); };
+        const bgOf = el => { while (el) { const c = getComputedStyle(el).backgroundColor; if (c !== 'rgba(0, 0, 0, 0)' && c !== 'transparent') return c; el = el.parentElement; } return 'rgb(255,255,255)'; };
+        const out = [];
+        document.querySelectorAll('.section--light .eyebrow, .section--paper .eyebrow, .tl-card .tag, .mock-foot').forEach(el => {
+          const r = ratio(getComputedStyle(el).color, bgOf(el)); if (r < 4.5) out.push(`${el.className} ${r.toFixed(2)}`);
+        });
+        const wa = document.querySelector('.wa-float');
+        const rw = ratio(getComputedStyle(wa).color, getComputedStyle(wa).backgroundColor); if (rw < 3) out.push(`wa-float ${rw.toFixed(2)}`);
+        const op = getComputedStyle(document.querySelector('.mock-foot')).opacity; if (op !== '1') out.push('mock-foot com opacidade');
+        return out;
+      });
+      check(contrast.length === 0, 'contraste insuficiente: ' + [...new Set(contrast)].join(', '));
+      // Texto: o advogado continua no comando; número do fundador atribuído
+      const body = await page.textContent('body');
+      check(!/Você só revisa/.test(body), 'texto "Você só revisa" reduz o papel do advogado');
+      check(/petições do fundador/.test(body), '"+200 petições" sem atribuição ao fundador');
+      check(!/escalar/i.test(body) && !/dia ruim/.test(body), 'jargão de startup/substituição de equipe');
     }
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -71,6 +96,8 @@ const check = (ok, msg) => { if (!ok) failures.push(msg); };
   check(h1 && await h1.isVisible(), 'sem JS: h1 invisível');
   const hidden = await p.$$eval('.reveal', els => els.filter(e => getComputedStyle(e).opacity === '0').length);
   check(hidden === 0, `sem JS: ${hidden} elementos .reveal invisíveis`);
+  const navLink = await p.$('#site-nav a[href="#faq"]');
+  check(navLink && await navLink.isVisible(), 'sem JS: menu inacessível no celular');
   await ctx.close();
   await browser.close();
 

@@ -1,12 +1,13 @@
 // JurisLab — interações leves. A página funciona sem este arquivo.
 (function () {
   var root = document.documentElement;
+  root.classList.add('js');
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Animação de entrada ao rolar
   var items = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window && !reduce) {
-    root.classList.add('js');
+    root.classList.add('reveal-on');
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
@@ -26,7 +27,9 @@
     };
     toggle.addEventListener('click', function () { setOpen(toggle.getAttribute('aria-expanded') !== 'true'); });
     nav.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { setOpen(false); toggle.focus(); }
+    });
   }
 
   // Ano no rodapé
