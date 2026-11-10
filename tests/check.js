@@ -5,7 +5,7 @@ const fs = require('fs');
 
 const FILE = path.resolve(__dirname, '..', process.argv[2] || 'index.html');
 const URL = 'file://' + FILE;
-const WA_URL = 'https://wa.me/5579991227741?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20quero%20entrar%20na%20lista%20de%20espera%20da%20JurisLab.';
+const WA_URL = 'https://wa.me/5579991227741?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20quero%20conhecer%20a%20JurisLab.';
 const IDS = ['topo', 'dor', 'solucao', 'um-dia', 'equipe', 'diferenciais', 'volume',
   'como-funciona', 'fundador', 'para-quem', 'faq', 'cta-final'];
 const SHOTS = path.join(__dirname, 'shots');
@@ -74,6 +74,14 @@ const check = (ok, msg) => { if (!ok) failures.push(msg); };
       check(!/Você só revisa/.test(body), 'texto "Você só revisa" reduz o papel do advogado');
       check(/petições do fundador/.test(body), '"+200 petições" sem atribuição ao fundador');
       check(!/escalar/i.test(body) && !/dia ruim/.test(body), 'jargão de startup/substituição de equipe');
+      // Sem marcas de texto de IA, sem lista de espera, sem contagem de agentes, com prompts validados
+      check(!/[—–…·]/.test(body), 'texto com travessão, reticências ou ponto médio');
+      check(!/Não é [^.]*\.\s*É /.test(body), 'construção "Não é X. É Y."');
+      check(!/lista de espera|vagas/i.test(body), 'ainda fala em lista de espera ou vagas');
+      check(!/\b13\b/.test(body), 'ainda cita 13 agentes');
+      check(/prompts/i.test(body) && /testados/i.test(body) && /validados/i.test(body), 'falta a mensagem dos prompts testados e validados');
+      const dashLine = await page.evaluate(() => getComputedStyle(document.querySelector('.eyebrow'), '::before').content);
+      check(dashLine === 'none' || dashLine === 'normal', 'eyebrow ainda desenha um traço antes do texto');
     }
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

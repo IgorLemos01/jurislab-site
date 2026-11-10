@@ -1,6 +1,6 @@
-# JurisLab — Landing page
+# JurisLab: landing page
 
-Página de apresentação da JurisLab: estrutura de agentes de IA no Claude para escritórios de advocacia (implantação, treinamento e atualização contínua). Todos os botões levam ao WhatsApp para a lista de espera.
+Página de apresentação da JurisLab: estrutura de agentes de IA no Claude para escritórios de advocacia (implantação, treinamento e atualização contínua). Todos os botões levam ao WhatsApp.
 
 ## Arquivos
 

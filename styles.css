@@ -1,4 +1,4 @@
-/* JurisLab — landing page */
+/* JurisLab, landing page */
 :root {
   --navy: #0B1B33;
   --navy-2: #12264A;
@@ -59,7 +59,6 @@ em { font-style: italic; color: var(--gold); }
   font-size: .78rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
   color: var(--gold); margin-bottom: 18px;
 }
-.eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
 
 /* Botões */
 .btn {
@@ -203,7 +202,7 @@ em { font-style: italic; color: var(--gold); }
 .center-cta { text-align: center; margin-top: 48px; }
 
 /* Equipe */
-.agents { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 16px; }
+.agents { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px; }
 .agent {
   padding: 24px; border-radius: var(--radius); background: rgba(255, 255, 255, .035);
   border: 1px solid var(--line-dark); transition: border-color .25s ease, transform .25s ease, background-color .25s ease;
@@ -322,7 +321,7 @@ footer a:hover { color: var(--gold-soft); }
 .wa-float:hover { transform: scale(1.06); }
 .wa-float svg { width: 32px; height: 32px; }
 
-/* Animação de entrada — só quando o JS está ativo */
+/* Animação de entrada, só quando o JS está ativo */
 .reveal-on .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
 .reveal-on .reveal.is-visible { opacity: 1; transform: none; }
 

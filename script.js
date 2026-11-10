@@ -1,4 +1,4 @@
-// JurisLab — interações leves. A página funciona sem este arquivo.
+// JurisLab: interações leves. A página funciona sem este arquivo.
 (function () {
   var root = document.documentElement;
   root.classList.add('js');
