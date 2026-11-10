@@ -15,7 +15,8 @@ Página de apresentação da JurisLab: estrutura de agentes de IA no Claude para
 ## Publicar
 
 Site estático, sem build. Basta servir `index.html`, `styles.css` e `script.js`.
-No GitHub Pages: **Settings → Pages → Deploy from a branch → `main` / `(root)`**.
+Publicado automaticamente no GitHub Pages: a cada atualização da `main`, a automação em `.github/workflows/pages.yml` copia o site para a branch `gh-pages`.
+Endereço: https://igorlemos01.github.io/jurislab-site/
 
 ## Testar
 
